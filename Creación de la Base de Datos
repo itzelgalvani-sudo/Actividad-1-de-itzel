@@ -1,0 +1,52 @@
+CREATE DATABASE GestionEmpleadosUNI;
+GO
+USE GestionEmpleadosUNI;
+GO
+CREATE TABLE CentrosTrabajo (
+    NumCentro VARCHAR(10) NOT NULL PRIMARY KEY,
+    NombreCentro VARCHAR(100) NOT NULL,
+    Ciudad VARCHAR(50) NOT NULL
+);
+GO
+CREATE TABLE Empleados (
+    NumEmpleado INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    Nombre VARCHAR(50) NOT NULL,
+    ApellidoPaterno VARCHAR(50) NOT NULL,
+    ApellidoMaterno VARCHAR(50) NOT NULL,
+    FechaNacimiento DATE NOT NULL,
+    RFC VARCHAR(13) NOT NULL,
+    NumCentro VARCHAR(10) NOT NULL,
+    Puesto VARCHAR(50) NOT NULL,
+    DescripcionPuesto VARCHAR(150) NOT NULL,
+    EsDirectivo BIT NOT NULL DEFAULT 0,
+    CONSTRAINT FK_Empleados_CentrosTrabajo FOREIGN KEY (NumCentro) 
+        REFERENCES CentrosTrabajo(NumCentro)
+);
+GO
+CREATE TABLE Directivos (
+    NumEmpleado INT NOT NULL PRIMARY KEY,
+    NumCentroSupervisado VARCHAR(10) NOT NULL,
+    ApoyoCombustible BIT NOT NULL DEFAULT 0,
+    CONSTRAINT FK_Directivos_Empleados FOREIGN KEY (NumEmpleado) 
+        REFERENCES Empleados(NumEmpleado),
+    CONSTRAINT FK_Directivos_CentrosSupervisado FOREIGN KEY (NumCentroSupervisado) 
+        REFERENCES CentrosTrabajo(NumCentro)
+);
+GO
+INSERT INTO CentrosTrabajo (NumCentro, NombreCentro, Ciudad) VALUES
+('000201', 'Tiendas Ángel Flores Ropa', 'Culiacán'),
+('000202', 'Tiendas Ángel Flores Muebles', 'Culiacán'),
+('000203', 'Tiendas Ángel Flores Cajas', 'Culiacán'),
+('049001', 'La Primavera Ropa', 'Culiacán'),
+('049002', 'La Primavera Muebles', 'Culiacán'),
+('049003', 'La Primavera Cajas', 'Culiacán');
+GO
+INSERT INTO Empleados (Nombre, ApellidoPaterno, ApellidoMaterno, FechaNacimiento, RFC, NumCentro, Puesto, DescripcionPuesto, EsDirectivo) VALUES
+('Juan', 'Pérez', 'López', '1990-05-15', 'PELJ900515ABC', '000201', 'Vendedor', 'Atención a clientes en departamento de ropa', 0),
+('María', 'Gómez', 'Ruiz', '1985-10-20', 'GORM851020DEF', '000202', 'Asesora de Ventas', 'Venta de muebles y línea blanca', 0),
+('Carlos', 'Sánchez', 'Torres', '1992-03-12', 'SATC920312GHI', '000203', 'Cajero General', 'Cobro y gestión de caja central', 0),
+('Ana', 'Fernández', 'Castro', '1988-07-25', 'FECA880725JKL', '049001', 'Supervisora de Piso', 'Coordinación del personal de ropa', 0),
+('Roberto', 'Mendoza', 'Vega', '1980-11-05', 'MEVR801105MNO', '049002', 'Gerente General', 'Dirección operativa y gerencial', 1);
+INSERT INTO Directivos (NumEmpleado, NumCentroSupervisado, ApoyoCombustible) VALUES
+(5, '049002', 1);
+GO
