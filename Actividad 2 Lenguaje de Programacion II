@@ -1,0 +1,110 @@
+#include <iostream>
+#include <windows.h>
+#include <sql.h>
+#include <sqlext.h>
+#include <iomanip>
+
+using namespace std;
+
+// Función para imprimir el encabezado de la Tabla de Empleados
+void imprimirTablaEmpleados() {
+    cout << "\n=======================================================================================================================" << endl;
+    cout << "                                              TABLA: EMPLEADOS GENERALES                                               " << endl;
+    cout << "=======================================================================================================================" << endl;
+    cout << left 
+         << setw(8)  << "No.Emp" 
+         << setw(15) << "Nombre" 
+         << setw(15) << "Ap. Paterno" 
+         << setw(15) << "Ap. Materno" 
+         << setw(12) << "F. Nac" 
+         << setw(14) << "RFC" 
+         << setw(10) << "Centro" 
+         << setw(15) << "Puesto" 
+         << setw(10) << "Directivo" << endl;
+    cout << "-----------------------------------------------------------------------------------------------------------------------" << endl;
+    cout << " ( Sin registros / Tabla vacia ) " << endl;
+    cout << "-----------------------------------------------------------------------------------------------------------------------\n" << endl;
+}
+
+// Función para imprimir el encabezado de la Tabla de Directivos
+void imprimirTablaDirectivos() {
+    cout << "=========================================================================================" << endl;
+    cout << "                                TABLA: DATOS DIRECTIVOS                                  " << endl;
+    cout << "=========================================================================================" << endl;
+    cout << left 
+         << setw(12) << "No.Empleado" 
+         << setw(25) << "Centro que Supervisa" 
+         << setw(25) << "Apoyo Combustible (SI/NO)" << endl;
+    cout << "-----------------------------------------------------------------------------------------" << endl;
+    cout << " ( Sin registros / Tabla vacia ) " << endl;
+    cout << "-----------------------------------------------------------------------------------------\n" << endl;
+}
+
+// Función para imprimir el catálogo de puestos / centros de trabajo
+void imprimirTablaCentros() {
+    cout << "=========================================================================================" << endl;
+    cout << "                            TABLA: CATALOGO DE CENTROS DE TRABAJO                        " << endl;
+    cout << "=========================================================================================" << endl;
+    cout << left 
+         << setw(18) << "Numero Centro" 
+         << setw(35) << "Nombre Centro" 
+         << setw(20) << "Ciudad" << endl;
+    cout << "-----------------------------------------------------------------------------------------" << endl;
+    cout << " ( Sin registros / Tabla vacia ) " << endl;
+    cout << "-----------------------------------------------------------------------------------------\n" << endl;
+}
+
+int main() {
+    // Configuración para corregir acentos y 'ñ' en la consola de Windows
+    SetConsoleOutputCP(CP_UTF8);
+
+    SQLHANDLE hEnv;
+    SQLHANDLE hDbc;
+    SQLRETURN retCode;
+
+    // 1. Inicializar entorno ODBC
+    SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &hEnv);
+    SQLSetEnvAttr(hEnv, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, 0);
+    SQLAllocHandle(SQL_HANDLE_DBC, hEnv, &hDbc);
+
+    // 2. Cadena de conexión usando el DSN de tu base de datos
+    SQLCHAR connectionString[] = "DSN=MiBaseDatosUNISQL;Trusted_Connection=yes;";
+
+    SQLCHAR outConnString[1024];
+    SQLSMALLINT outConnStringLen;
+
+    cout << "Conectando a la Base de Datos SQL Server..." << endl;
+
+    // 3. Conectar
+    retCode = SQLDriverConnect(
+        hDbc, NULL, connectionString, SQL_NTS,
+        outConnString, sizeof(outConnString), &outConnStringLen,
+        SQL_DRIVER_COMPLETE
+    );
+
+    if (SQL_SUCCEEDED(retCode)) {
+        cout << "\n=============================================" << endl;
+        cout << "   ¡Conexión establecida exitosamente a SQL!  " << endl;
+        cout << "=============================================\n" << endl;
+
+        // 4. Imprimir los encabezados de las tablas requeridas
+        imprimirTablaEmpleados();
+        imprimirTablaDirectivos();
+        imprimirTablaCentros();
+        imprimirTablaPuestos(); // Llamada a la función para imprimir el catálogo de puestos
+
+        // Desconectar
+        SQLDisconnect(hDbc);
+    } else {
+        cout << "\nError: No se pudo conectar a la base de datos." << endl;
+    }
+
+    // 5. Liberar memoria
+    SQLFreeHandle(SQL_HANDLE_DBC, hDbc);
+    SQLFreeHandle(SQL_HANDLE_ENV, hEnv);
+
+    cout << "Presiona Enter para salir...";
+    cin.get();
+
+    return 0;
+}
