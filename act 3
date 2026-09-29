@@ -1,0 +1,12 @@
+USE (master);
+BACKUP DATABASE [AkirasBoutiques] 
+TO DISK = N'C:\Backups\AkirasBoutiques.bak' 
+WITH 
+    FORMAT, -- Reemplaza si ya existía un archivo previo
+    MEDIANAME = N'SQLServerBackups',
+    NAME = N'AkirasBoutiques-Full Database Backup', 
+    STATS = 10,
+    CHECKSUM;
+    RESTORE VERIFYONLY 
+FROM DISK = N'C:\Backups\AkirasBoutiques.bak' 
+WITH CHECKSUM;
