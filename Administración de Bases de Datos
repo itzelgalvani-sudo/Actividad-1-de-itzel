@@ -1,0 +1,126 @@
+USE AkirasBoutiques;
+IF OBJECT_ID('dbo.Sucursales', 'U') IS NOT NULL 
+    DROP TABLE dbo.Sucursales;
+    CREATE TABLE dbo.Sucursales (
+    Id_Sucursal INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre_Sucursal VARCHAR(100) NOT NULL,
+    Id_Encargado INT NULL, -- Se relacionará con la tabla Empleados más adelante
+    Direccion VARCHAR(150) NOT NULL,
+    Telefono VARCHAR(20) NOT NULL,
+    Ciudad VARCHAR(50) NOT NULL,
+    Estado VARCHAR(50) NOT NULL
+);
+IF OBJECT_ID('dbo.Empleados', 'U') IS NOT NULL 
+    DROP TABLE dbo.Empleados;
+    CREATE TABLE dbo.Empleados (
+    Id_Empleado INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre VARCHAR(100) NOT NULL,
+    Direccion VARCHAR(150) NOT NULL,
+    Telefono VARCHAR(20) NOT NULL,
+    Edad INT NOT NULL,
+    Id_Sucursal INT NOT NULL,
+    Email VARCHAR(100) NOT NULL,
+    Contrasena VARCHAR(50) NOT NULL,
+    CONSTRAINT FK_Empleados_Sucursales FOREIGN KEY (Id_Sucursal) REFERENCES dbo.Sucursales(Id_Sucursal)
+);
+SET IDENTITY_INSERT dbo.Sucursales ON;
+
+INSERT INTO dbo.Sucursales (Id_Sucursal, Nombre_Sucursal, Direccion, Telefono, Ciudad, Estado)
+VALUES 
+(1, 'Akira’s Boutique: Las Mercedes', 'Calle Roble #507 Fracc. Las Mercedes', '444 783 1225', 'San Luis Potosí', 'San Luis Potosí'),
+(2, 'Akira’s Boutique: Obraje', 'Calle Dr. Jesús Díaz de León #438 col. Obraje', '449 378 0921', 'Aguascalientes', 'Aguascalientes'),
+(3, 'Akira’s Boutique: Galerías Mazatlán', 'Av. de la Marina #6204, Marina, local 35', '669 293 2059', 'Mazatlán', 'Sinaloa'),
+(4, 'Akira’s Boutique: Zapopan', 'Av. Manuel J. Clouthier 525 col. Benito Juárez', '333 784 1230', 'Zapopan', 'Jalisco'),
+(5, 'Akira´s Boutique: Melchor', 'Av. Melchor Ocampo #2528 Zona Centro', '614 390 6721', 'Chihuahua', 'Chihuahua'),
+(6, 'Akira’s Boutique: Constitución', 'Calle Constitución #106 Zona Centro', '618 196 2954', 'Durango', 'Durango'),
+(7, 'Akira’s Boutique: Centro', 'Av. Hidalgo #338 Zacatecas Centro', '492 930 1250', 'Zacatecas', 'Zacatecas');
+
+SET IDENTITY_INSERT dbo.Sucursales OFF;
+INSERT INTO dbo.Empleados (Nombre, Direccion, Telefono, Edad, Id_Sucursal, Email, Contrasena) VALUES
+-- Sucursal 1: Las Mercedes (Encargada: Sonia Alejandra Fernández Moreno)
+('Sonia Alejandra Fernández Moreno', 'Calle Roble #507', '444 783 1225', 34, 1, 'sfernandez@akiras.com', 'Pass123!'),
+('Carlos Eduardo Gómez', 'Av. Venustiano Carranza #102', '444 111 2233', 25, 1, 'cgomez@akiras.com', 'Pass123!'),
+('Ana María López', 'Calle Hidalgo #45', '444 222 3344', 28, 1, 'alopez@akiras.com', 'Pass123!'),
+('Luis Fernando Torres', 'Col. Lomas #88', '444 333 4455', 22, 1, 'ltorres@akiras.com', 'Pass123!'),
+('Sofía Ramírez', 'Calle Juárez #12', '444 444 5566', 30, 1, 'sramirez@akiras.com', 'Pass123!'),
+
+-- Sucursal 2: Obraje (Encargado: Fernando Calderón Ayala)
+('Fernando Calderón Ayala', 'Calle Dr. Jesús Díaz de León #438', '449 378 0921', 40, 2, 'fcalderon@akiras.com', 'Pass123!'),
+('Andrea Castillo', 'Av. Convención #304', '449 555 6677', 26, 2, 'acastillo@akiras.com', 'Pass123!'),
+('Jorge Alberto Hernández', 'Calle Nieto #89', '449 666 7788', 29, 2, 'jhernandez@akiras.com', 'Pass123!'),
+('Lucía Morales', 'Fracc. Jardines #15', '449 777 8899', 23, 2, 'lmorales@akiras.com', 'Pass123!'),
+('Roberto Carlos Gutiérrez', 'Calle Madero #201', '449 888 9900', 31, 2, 'rgutierrez@akiras.com', 'Pass123!'),
+
+-- Sucursal 3: Galerías Mazatlán (Encargada: Daniela Fernanda Díaz Ordaz)
+('Daniela Fernanda Díaz Ordaz', 'Av. de la Marina #6204', '669 293 2059', 32, 3, 'ddiaz@akiras.com', 'Pass123!'),
+('Miguel Ángel Ortiz', 'Av. Camarón Sábalo #40', '669 123 4567', 27, 3, 'mortiz@akiras.com', 'Pass123!'),
+('Valeria Sánchez', 'Col. Centro #505', '669 234 5678', 24, 3, 'vsanchez@akiras.com', 'Pass123!'),
+('Gabriel Ruiz', 'Fracc. Real del Valle #12', '669 345 6789', 35, 3, 'gruiz@akiras.com', 'Pass123!'),
+('Camila Navarro', 'Av. Insurgentes #88', '669 456 7890', 21, 3, 'cnavarro@akiras.com', 'Pass123!'),
+
+-- Sucursal 4: Zapopan (Encargado: Mario Alberto Jiménez Salcido)
+('Mario Alberto Jiménez Salcido', 'Av. Manuel J. Clouthier 525', '333 784 1230', 38, 4, 'mjimenez@akiras.com', 'Pass123!'),
+('Patricia Delgado', 'Av. Patria #1200', '333 987 6543', 29, 4, 'pdelgado@akiras.com', 'Pass123!'),
+('Alejandro Vargas', 'Col. Las Águilas #44', '333 876 5432', 33, 4, 'avargas@akiras.com', 'Pass123!'),
+('Mariana Castro', 'Av. Hidalgo #300', '333 765 4321', 25, 4, 'mcastro@akiras.com', 'Pass123!'),
+('Diego Alonso Méndez', 'Calle Acueducto #90', '333 654 3210', 22, 4, 'dmendez@akiras.com', 'Pass123!'),
+
+-- Sucursal 5: Melchor (Encargada: Yesenia Guadalupe Campos Rojo)
+('Yesenia Guadalupe Campos Rojo', 'Av. Melchor Ocampo #2528', '614 390 6721', 36, 5, 'ycampos@akiras.com', 'Pass123!'),
+('Esteban Mendoza', 'Calle Aldama #101', '614 111 0000', 30, 5, 'emendoza@akiras.com', 'Pass123!'),
+('Natalia Aguilar', 'Av. Universidad #500', '614 222 1111', 23, 5, 'naguilar@akiras.com', 'Pass123!'),
+('Ricardo Medina', 'Col. San Felipe #32', '614 333 2222', 28, 5, 'rmedina@akiras.com', 'Pass123!'),
+('Daniela Reyes', 'Calle Victoria #77', '614 444 3333', 26, 5, 'dreyes@akiras.com', 'Pass123!'),
+
+-- Sucursal 6: Constitución (Encargada: Tamara Alejandra Bernal Ramos)
+('Tamara Alejandra Bernal Ramos', 'Calle Constitución #106', '618 196 2954', 31, 6, 'tbernal@akiras.com', 'Pass123!'),
+('Hugo Saldaña', 'Av. 20 de Noviembre #400', '618 555 4433', 35, 6, 'hsaldana@akiras.com', 'Pass123!'),
+('Fernanda Ríos', 'Col. Esperanza #12', '618 666 5544', 22, 6, 'frios@akiras.com', 'Pass123!'),
+('Javier Espinoza', 'Calle Negrete #80', '618 777 6655', 27, 6, 'jespinoza@akiras.com', 'Pass123!'),
+('Paula Guerrero', 'Av. Dolores del Río #150', '618 888 7766', 24, 6, 'pguerrero@akiras.com', 'Pass123!'),
+
+-- Sucursal 7: Centro (Encargado: Samuel Enrique Barrios Enciso)
+('Samuel Enrique Barrios Enciso', 'Av. Hidalgo #338', '492 930 1250', 37, 7, 'sbarrios@akiras.com', 'Pass123!'),
+('Adriana Lara', 'Calle Morelos #50', '492 123 9988', 28, 7, 'alara@akiras.com', 'Pass123!'),
+('Gonzalo Peñaloza', 'Av. Juárez #210', '492 234 8877', 32, 7, 'gpenaloza@akiras.com', 'Pass123!'),
+('Monika Ibarra', 'Col. Díaz Ordaz #5', '492 345 7766', 25, 7, 'mibarra@akiras.com', 'Pass123!'),
+('Raúl Cárdenas', 'Calle Tacuba #102', '492 456 6655', 29, 7, 'rcardenas@akiras.com', 'Pass123!');
+UPDATE dbo.Sucursales SET Id_Encargado = 1 WHERE Id_Sucursal = 1;
+UPDATE dbo.Sucursales SET Id_Encargado = 6 WHERE Id_Sucursal = 2;
+UPDATE dbo.Sucursales SET Id_Encargado = 11 WHERE Id_Sucursal = 3;
+UPDATE dbo.Sucursales SET Id_Encargado = 16 WHERE Id_Sucursal = 4;
+UPDATE dbo.Sucursales SET Id_Encargado = 21 WHERE Id_Sucursal = 5;
+UPDATE dbo.Sucursales SET Id_Encargado = 26 WHERE Id_Sucursal = 6;
+UPDATE dbo.Sucursales SET Id_Encargado = 31 WHERE Id_Sucursal = 7;
+ALTER TABLE dbo.Sucursales
+ADD CONSTRAINT FK_Sucursales_Encargado FOREIGN KEY (Id_Encargado) REFERENCES dbo.Empleados(Id_Empleado);
+SELECT 
+    s.Id_Sucursal,
+    s.Nombre_Sucursal,
+    e.Nombre AS Nombre_Encargado,
+    s.Ciudad,
+    s.Estado,
+    s.Telefono
+FROM dbo.Sucursales s
+LEFT JOIN dbo.Empleados e ON s.Id_Encargado = e.Id_Empleado;
+SELECT 
+    e.Id_Empleado,
+    e.Nombre AS Nombre_Empleado,
+    e.Edad,
+    e.Email,
+    s.Nombre_Sucursal
+FROM dbo.Empleados e
+INNER JOIN dbo.Sucursales s ON e.Id_Sucursal = s.Id_Sucursal;
+SELECT 
+    s.Nombre_Sucursal,
+    COUNT(e.Id_Empleado) AS Total_Empleados
+FROM dbo.Sucursales s
+LEFT JOIN dbo.Empleados e ON s.Id_Sucursal = e.Id_Sucursal
+GROUP BY s.Nombre_Sucursal;
+SELECT 
+    e.Id_Empleado,
+    e.Nombre,
+    e.Email,
+    e.Telefono
+FROM dbo.Empleados e
+WHERE e.Id_Sucursal = 1;
