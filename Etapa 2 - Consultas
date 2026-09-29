@@ -1,0 +1,97 @@
+USE AkirasBoutiques;
+SELECT DISTINCT c.*
+FROM Cliente c
+INNER JOIN Factura f ON c.Id_Cliente = f.Id_Cliente
+WHERE YEAR(f.Fecha) = 2021;
+SELECT DISTINCT c.*
+FROM Cliente c
+INNER JOIN Factura f ON c.Id_Cliente = f.Id_Cliente
+WHERE YEAR(f.Fecha) = 2022;
+SELECT DISTINCT c.*
+FROM Cliente c
+INNER JOIN Factura f ON c.Id_Cliente = f.Id_Cliente
+WHERE YEAR(f.Fecha) = 2021 AND MONTH(f.Fecha) = 12;
+SELECT 
+    CONCAT(c.Nombre, ' ', c.Apellido) AS Cliente,
+    f.Id_Factura,
+    f.Fecha,
+    p.Nombre AS Producto,
+    d.Cantidad,
+    d.Precio
+FROM Cliente c
+INNER JOIN Factura f ON c.Id_Cliente = f.Id_Cliente
+INNER JOIN Detalle d ON f.Id_Detalle = d.Id_Detalle
+INNER JOIN Producto p ON d.Id_Producto = p.Id_Producto
+WHERE CONCAT(c.Nombre, ' ', c.Apellido) IN (
+    'Valentina Anastasia Huerta Corral',
+    'Zayra Manuela Gómez López',
+    'Dante Eduardo Dolores Meza',
+    'Ana Maribel Cedillo Núñez',
+    'Rodrigo Ismael Silva Ugarte'
+);
+SELECT TOP 1 
+    p.Id_Producto, 
+    p.Nombre, 
+    SUM(d.Cantidad) AS Total_Vendido
+FROM Producto p
+INNER JOIN Detalle d ON p.Id_Producto = d.Id_Producto
+GROUP BY p.Id_Producto, p.Nombre
+ORDER BY Total_Vendido DESC;
+SELECT TOP 1 
+    Id_Producto, 
+    Nombre, 
+    Stock
+FROM Producto
+ORDER BY Stock DESC;
+SELECT 
+    f.Id_Factura,
+    f.Fecha,
+    c.Nombre AS Nombre_Cliente,
+    c.Apellido AS Apellido_Cliente
+FROM Factura f
+INNER JOIN Cliente c ON f.Id_Cliente = c.Id_Cliente
+ORDER BY f.Fecha ASC;
+SELECT Id_Cliente, Nombre, Apellido, email
+FROM Cliente
+ORDER BY Nombre ASC, Apellido ASC;
+SELECT 
+    cat.Nombre AS Categoria,
+    p.Nombre AS Producto,
+    p.Precio,
+    p.Stock
+FROM Producto p
+INNER JOIN Categoria cat ON p.Id_Categoria = cat.Id_Categoria
+WHERE cat.Nombre IN ('Falda', 'Pantalón', 'Chamarra', 'Zapatos', 'Accesorios')
+ORDER BY cat.Nombre, p.Nombre;
+SELECT 
+    s.Nombre AS Sucursal,
+    e.Nombre AS Encargado_Nombre,
+    e.Apellido AS Encargado_Apellido,
+    e.Puesto
+FROM Sucursal s
+INNER JOIN Empleado e ON s.Id_Encargado = e.Id_Empleado;
+SELECT 
+    e.Id_Empleado,
+    e.Nombre,
+    e.Apellido,
+    e.Puesto,
+    s.Nombre AS Sucursal
+FROM Empleado e
+INNER JOIN Sucursal s ON e.Id_Sucursal = s.Id_Sucursal
+WHERE s.Nombre LIKE '%Constitución%';
+SELECT 
+    Id_Cliente,
+    Nombre,
+    Apellido,
+    Fec_Nac,
+    DATEDIFF(YEAR, Fec_Nac, GETDATE()) - 
+        CASE 
+            WHEN DATEADD(YEAR, DATEDIFF(YEAR, Fec_Nac, GETDATE()), Fec_Nac) > GETDATE() THEN 1 
+            ELSE 0 
+        END AS Edad
+FROM Cliente
+WHERE (DATEDIFF(YEAR, Fec_Nac, GETDATE()) - 
+        CASE 
+            WHEN DATEADD(YEAR, DATEDIFF(YEAR, Fec_Nac, GETDATE()), Fec_Nac) > GETDATE() THEN 1 
+            ELSE 0 
+        END) > 30;
